@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using EventPlatformProjectMVC.Domain
+
+@model IEnumerable<EventPlatformProjectMVC.Domain.Event>
+@inject SignInManager<ApplicationUser> SignInManager
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+@{
+    ViewData["Title"] = "Event";
+}
+
+<h1>Index</h1>
+
+@if (User.IsInRole(EventPlatformProjectMVC.Domain.UserRole.Organizer.ToString()))
+{
+    <p>
+        <a class="btn btn-outline-success" asp-area="" asp-action="Create" asp-controller="Event">Create New</a>
+    </p>
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <a class="text-decoration-none card-link-index" asp-controller="Event" asp-action="Details" asp-route-id="@item.Id">
+                    <div class="card">
+                        @if (item.Picture != null && item.Picture.Length > 0)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Picture)" class="card-img-top" alt="Event Picture" />
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-center align-items-center bg-light" style="height: 15rem;">
+                                <span>No Image</span>
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h2 class="card-title">@item.Title</h2>
+                            <p class="card-text text-truncate" style="max-height: 4.5rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+                                @item.Description
+                            </p>
+                            <div>
+                                <h5 class="card-text">Location: @item.Location</h5>
+                                <div class="d-flex justify-content-between">
+                                    <p class="card-text">Start Date: @item.StartDateTime.ToString("MM/dd/yyyy")</p>
+                                    <p class="card-text">End Date: @item.EndDateTime.ToString("MM/dd/yyyy")</p>
+                                </div>
+                                <p class="card-text">Organizer: @item.Organizer.Name</p>
+                                <p class="card-text">Created At: @item.CreatedAt.ToString("MM/dd/yyyy")</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+

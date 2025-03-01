@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using EventPlatformProjectMVC.Domain
+
+@model IEnumerable<EventPlatformProjectMVC.Domain.Event>
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+@{
+    ViewData["Title"] = "Index";
+    int pageNumber = ViewData["PageNumber"] != null ? (int)ViewData["PageNumber"]! : 1;
+}
+
+<div class="container">
+    <div>
+        <div class="">
+            <img src="~/images/event_banner.png" style="width:100%; height:25rem;" class="img-fluid card-img" alt="Event Banner" />
+        </div>
+        <div class="d-flex header-content align-items-center justify-content-center mt-4 mb-4">
+            <h1 class="all-events-title">All Events</h1>
+        </div>
+    </div>
+    <div class="row" id="event-container">
+        @foreach (var item in Model)
+        {
+            @await Html.PartialAsync("_EventListPartial", new List<Event> {item});
+        }
+    </div>
+    <div class="btn-div-loadmore">
+        <button id="loadMoreBtn" class="btn btn-load-more" data-page="@pageNumber"> Load More</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#loadMoreBtn").click(function () {
+            var button = $(this);
+            var nextPage = parseInt(button.attr("data-page")) + 1;
+
+            $.ajax({
+                url: "/Home/LoadMore",
+                type: "GET",
+                data: { pageNumber: nextPage },
+                success: function (data) {
+                    if (data.trim() === "") {
+                        button.hide(); // Hide button if no more data
+                    } else {
+                        $("#event-container").append(data);
+                        button.attr("data-page", nextPage);
+                    }
+                },
+                error: function () {
+                    alert("Failed to load more events.");
+                }
+            });
+        });
+    });
+</script>
+

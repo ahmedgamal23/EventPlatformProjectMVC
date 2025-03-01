@@ -1,0 +1,24 @@
+
+
+----> 
+------------------------
+Application Structure :-
+------------------------
+
+- EventPlatformProjectMVC
+           ||
+           \/
+- EventPlatformProject.Application
+           ||
+           \/
+- EventPlatformProject.Infrastructure
+           ||
+           \/
+        Database
+
+
+UI   ->   IUnitOfWork   ->   Repository   ->   Database
+-----------------------------------------
+
+
+
